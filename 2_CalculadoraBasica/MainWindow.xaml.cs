@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace _2_CalculadoraBasica
 {
@@ -23,6 +13,53 @@ namespace _2_CalculadoraBasica
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void operadorTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            calcularButton.IsEnabled = Regex.IsMatch((sender as TextBox).Text, @"^(\+|-|\*|/)$");
+        }
+
+        private void calcularButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                double operando1 = double.Parse(operando1TextBox.Text);
+                double operando2 = double.Parse(operando2TextBox.Text);
+
+                double resultado;
+                switch (operadorTextBox.Text)
+                {
+                    case "+":
+                        resultado = operando1 + operando2;
+                        break;
+                    case "-":
+                        resultado = operando1 - operando2;
+                        break;
+                    case "*":
+                        resultado = operando1 * operando2;
+                        break;
+                    case "/":
+                        resultado = operando1 / operando2;
+                        break;
+                    default:
+                        resultado = 0;
+                        break;
+                }
+
+                resultadoTextBox.Text = $"{resultado}";
+            }catch(Exception exception)
+            {
+                MessageBox.Show(exception.Message, principalWindow.Title);
+            }
+        }
+
+        private void limpiarButton_Click(object sender, RoutedEventArgs e)
+        {
+            operando1TextBox.Text = "";
+            operando2TextBox.Text = "";
+            operadorTextBox.Text = "";
+            resultadoTextBox.Text = "";
         }
     }
 }
